@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib" : ["es5", "es2015.promise", "es6"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "noEmitOnError": false,
+        "preserveConstEnums": true,
+        "noLib": false,
+        "sourceMap": true,
+        "outDir": "./dist",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "pretty": true,
+        "listFiles": false,
+        "jsx": "react"
+    },
+    "include": [
+        "./typings/**/*",
+        "./src/**/*"
+    ]
+}
