@@ -6,7 +6,10 @@
 import * as Redux from 'redux';
 import reduxThunk from 'redux-thunk';
 
-export default class Store {
+import { StoreAction } from '../types';
+import * as Utils from '../utils';
+
+abstract class Store<T> {
 
     public static OVERWRITE = "STORE_OVERWRITE_APP_TARGET_DATA";
     public static UPDATE = "STORE_UPDATE_APP_TARGET_DATA";
@@ -15,16 +18,20 @@ export default class Store {
     private _store: Redux.Store<any>;
 
     constructor() {
-        this._store = this._createStore();
+        this._store = this.createStore();
     }
 
     public get store() {
         return this._store;
     }
 
-    public get<T>(ns: string): T {
+    public get<T>(ns: string, root: any): T {
+        if (!root) {
+            return;
+        }
+
         let nsChain = ns.split('.').reverse();
-        let data = this._store.getState().appReducer;
+        let data = root;
 
         while (nsChain.length) {
             data  = data[nsChain.pop()];
@@ -40,39 +47,15 @@ export default class Store {
         this._store.dispatch(action);
     }
 
-    private _createStore() {
-        const middlewares: Redux.Middleware[] = [
-            reduxThunk
-        ];
-
-        // if ((global as any).__DEV__) {
-        //     //middlewares.push((ReduxLogger as any).default());
-        //     middlewares.push(logger);
-        // }
-
-        const reduxNativeDevTools: any = (global as any).reduxNativeDevTools;
-
-        const enhancer = Redux.compose(
-            Redux.applyMiddleware(...middlewares),
-            reduxNativeDevTools ? reduxNativeDevTools() : nope => nope
-        );
-
-        return Redux.createStore<any>(this._getRootReducer(), {
-            appReducer: {}
-        }, enhancer);
-    }
-
-    private _getRootReducer() {
-        return Redux.combineReducers({
-            routerReducer,
-            appReducer
-        });
-    }
+    protected abstract createStore(): Redux.Store<any>;
 }
 
+export default Store;
+
 function getLeafObject(obj: any, ns: string, param: any) {
-    let nsChain = Helpers.foramt(ns, param).split(".");
+    let nsChain = Utils.String.foramt(ns, param).split(".");
     let leafKey = nsChain.pop();
+
     obj = obj || {};
     nsChain.reverse();
 
@@ -92,7 +75,7 @@ function getLeafObject(obj: any, ns: string, param: any) {
     };
 }
 
-function appReducer(state: any = {}, action: StoreAction) {
+export function dataReducer(state: any = {}, action: StoreAction) {
     switch (action.type) {
 
         case Store.OVERWRITE: {

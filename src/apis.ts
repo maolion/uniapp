@@ -1,10 +1,9 @@
-import App, { Options as AppOptions } from './components/app/index';
-import fetch from './libs/fetch';
+import { FrameworkConfiguration } from './types';
 
-export function initAPIs(options: AppOptions, app: App) {
+export function initAPIs(options: FrameworkConfiguration) {
     const apis: any = {};
     const apiMap = options.apiMap;
-    const apiHost = options.config.apiHost.replace(/\/$/, '');
+    const apiHost = options.apiHost.replace(/\/$/, '');
     
     for (let partName of Object.keys(apiMap)) {
         let part = apiMap[partName];
@@ -15,13 +14,13 @@ export function initAPIs(options: AppOptions, app: App) {
     }
 
     return apis;
-    function getApiHandler(apiInfo: any) {
+    function getApiHandler(apiInfo: { url: string; method: any }) {
         apiInfo.url = (apiInfo.url||'').charAt(0) == '/' ? apiInfo.url : '/' + apiInfo.url;
         return function(data?: any) {
-            return fetch(`${apiHost}${apiInfo.url}`, {
+            return options.apiRequestHandler(apiHost + apiInfo.url, {
                 method: apiInfo.method,
                 body: data,
-                rapConfig: (options.config||{} as any).RAP
+                rapConfig: options.RAP
             });
         };
     }

@@ -1,16 +1,26 @@
 import * as React from 'react';
 import * as Villa from 'villa';
-import { Component } from 'react';
+import { Component, PureComponent, HTMLAttributes, HTMLProps } from 'react';
+import * as Immutable from 'immutable';
 
-import { HashMap } from './types/index.d';
+import { HashMap } from './types';
 import * as Store from './store';
 
 export type ActionHandler = <T>(data?: any) => Promise<T>;
+
+export interface ActionModalProps {
+    type: "loading" | "error";
+    message: string;
+}
+
+export abstract class ActionModal extends PureComponent<ActionModalProps, any> {
+}
 
 export function pack(
     actions: ActionHandler[],
     options?: {
         params?: HashMap<any>;
+        actionModalClass: React.ClassicComponentClass<ActionModalProps>;
         components?: {
             loading: JSX.Element;
             error: JSX.Element;
@@ -21,10 +31,43 @@ export function pack(
         class ActionDecorator extends Component<any, any> {
             constructor(props: any, context: any) {
                 super(props, context);
+
                 this.state = {
                     loading: true,
                     errorMsg: null
                 };
+            }
+
+            
+            shouldComponentUpdate(nextProps: any, nextState: any) {
+                // 以下代码逻辑来自： https://zhuanlan.zhihu.com/p/2029597 @camsong
+
+                const currentProps = this.props;
+                const currentState = this.state;
+                
+                if (Object.keys(currentProps).length != Object.keys(nextProps).length ||
+                    Object.keys(currentState).length != Object.keys(nextState).length
+                ) {
+                    return true;
+                }
+
+                for (const key in nextProps) {
+                    if (currentProps[key] !== nextProps[key] || 
+                        !Immutable.is(currentProps[key], nextProps[key])
+                    ) {
+                        return true;
+                    }
+                }
+
+                for (const key in nextState) {
+                    if (currentState[key] !== nextState[key] || 
+                        !Immutable.is(currentState[key], nextState[key])
+                    ) {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             componentWillMount() {
@@ -41,9 +84,10 @@ export function pack(
                     }
                 });
             }
-
+            
             render() {
                 let renderComponent: JSX.Element;
+                
                 if (!this.state.loading && !this.state.errorMsg) {
                     if (target.prototype instanceof Component) {
                         renderComponent = (React.createElement(target, {}))
@@ -54,32 +98,17 @@ export function pack(
                     if (this.state.loading) {
                         renderComponent = options.components  && options.components.loading 
                             ? options.components.loading
-                            : (
-                                <View 
-                                    style={[
-                                        styles.container,
-                                        styles.loadingContainer
-                                    ]}>
-                                    <Text>loading...</Text>
-                                </View>
-                            );
+                            : <options.actionModalClass type="loading" message="loading..." />
                     } else {
                         renderComponent = options.components  && options.components.error 
                             ? React.cloneElement(
                                 options.components.error, 
                                 { errorMsg: this.state.errorMsg }
                             )
-                            : (
-                                <View 
-                                    style={[
-                                        styles.container,
-                                        styles.errorContainer
-                                    ]}>
-                                    <Text>{this.state.errorMsg}</Text>
-                                </View>
-                            );
+                            : <options.actionModalClass type="error" message={this.state.errorMsg} />;
                     }
                 }
+
                 return renderComponent;
             }
         }
@@ -91,19 +120,3 @@ export function pack(
         }
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center"
-    } as ViewStyle,
-    loadingContainer: {
-
-    },
-    errorContainer: {
-        backgroundColor: "red",
-        color: "white"
-    } as ViewStyle
-});
-

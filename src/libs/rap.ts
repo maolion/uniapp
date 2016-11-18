@@ -1,13 +1,13 @@
 import * as MockJS from 'mockjs';
 
-import { HashMap } from '../types/index.d';
-
+import { HashMap } from '../types';
 import * as cache from './cache';
 
 interface CacheItem {
     rap: RAP;
     request: Promise<Response>;
 }
+
 const RAPInstacheCacheMapping: HashMap<Promise<RAP>> = {}; 
 
 const PARAM_REG = /\/:[^\/]*/g;
