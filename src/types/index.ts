@@ -46,13 +46,16 @@ export interface FrameworkConfiguration {
     version: string;
     router: JSX.Element;
     actions: HashMap<any>;
-    apiMap: any;
     env: string;
-    apiHost: string;
-    apiRequestHandler: (url: string, options?: RequestOptions) => Promise<any>;
-    RAP: {
-        host: string;
-        projectId: number;
-    };
+}
 
+/**
+ * action handler 配置信息
+ */
+export interface ActionHandlerOptions {
+    name?: string;
+    storeKey?: string;
+    method?: "overwrite"|"update"|"remove";
+    actionHandler?: (data: any) => any;
+    dataType?: "origin" | "immutable";
 }

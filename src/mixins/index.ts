@@ -1,0 +1,1 @@
+export { default as  PureRender } from './pure-render';

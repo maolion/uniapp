@@ -1,10 +1,31 @@
 import * as React from 'react';
 import * as Villa from 'villa';
-import { Component, PureComponent, HTMLAttributes, HTMLProps } from 'react';
+import { 
+    Component, 
+    PureComponent, 
+    HTMLAttributes, 
+    HTMLProps 
+} from 'react';
 import * as Immutable from 'immutable';
 
-import { HashMap } from './types';
+import { 
+    HashMap, 
+    ActionHandlerOptions
+} from './types';
+
 import * as Store from './store';
+import { PureRender } from './mixins';
+import {
+    STORE_OVERWRITE,
+    STORE_UPDATE,
+    STORE_REMOVE
+} from './constants';
+
+const actionTypeMap: HashMap<string> = {
+    overwrite: STORE_OVERWRITE,
+    update: STORE_UPDATE,
+    remove: STORE_REMOVE
+};
 
 export type ActionHandler = <T>(data?: any) => Promise<T>;
 
@@ -40,39 +61,12 @@ export function pack(
 
             
             shouldComponentUpdate(nextProps: any, nextState: any) {
-                // 以下代码逻辑来自： https://zhuanlan.zhihu.com/p/2029597 @camsong
-
-                const currentProps = this.props;
-                const currentState = this.state;
-                
-                if (Object.keys(currentProps).length != Object.keys(nextProps).length ||
-                    Object.keys(currentState).length != Object.keys(nextState).length
-                ) {
-                    return true;
-                }
-
-                for (const key in nextProps) {
-                    if (currentProps[key] !== nextProps[key] || 
-                        !Immutable.is(currentProps[key], nextProps[key])
-                    ) {
-                        return true;
-                    }
-                }
-
-                for (const key in nextState) {
-                    if (currentState[key] !== nextState[key] || 
-                        !Immutable.is(currentState[key], nextState[key])
-                    ) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return PureRender.shouldComponentUpdate.call(this, nextProps, nextState);
             }
 
             componentWillMount() {
                 const params: HashMap<any> = options.params || this.props.params;
-                Villa.each(actions, async (action) => {
+                Villa.each(actions, async action => {
                     try {
                         await action<any>(params);
                         this.setState({ loading: false });
@@ -87,7 +81,8 @@ export function pack(
             
             render() {
                 let renderComponent: JSX.Element;
-                
+                let ActionModal = options.actionModalClass;
+
                 if (!this.state.loading && !this.state.errorMsg) {
                     if (target.prototype instanceof Component) {
                         renderComponent = (React.createElement(target, {}))
@@ -98,14 +93,16 @@ export function pack(
                     if (this.state.loading) {
                         renderComponent = options.components  && options.components.loading 
                             ? options.components.loading
-                            : <options.actionModalClass type="loading" message="loading..." />
+                            : <ActionModal type="loading" message="loading..." />
+                        ;
                     } else {
                         renderComponent = options.components  && options.components.error 
                             ? React.cloneElement(
                                 options.components.error, 
                                 { errorMsg: this.state.errorMsg }
                             )
-                            : <options.actionModalClass type="error" message={this.state.errorMsg} />;
+                            : <ActionModal type="error" message={this.state.errorMsg} />
+                        ;
                     }
                 }
 
@@ -119,4 +116,52 @@ export function pack(
             return <ActionDecorator />;
         }
     }
+}
+
+export function _mount(actions: HashMap<any>) {
+    let target = exports;
+
+    for (let key of Object.keys(actions)) {
+        let part: typeof Store.ActionHandlers = actions[key];
+        if (!(part.prototype instanceof Store.ActionHandlers)) {
+            continue;
+        }
+        for (let action of part.__$qmox_actions__) {
+            _actionHandlerWrapper(part, action);
+        }
+
+        target[key] = part;
+    }
+
+    delete exports._mount;
+
+    return target;
+}
+
+function _actionHandlerWrapper(target: any, action: ActionHandlerOptions) {
+    target[action.name] = function () {
+        const args = arguments;
+        return action.actionHandler.apply(target, args)
+            .then((ret: any) => {
+                if (action.storeKey) {
+                    const param: any = {};
+                    
+                    for (let i = 0, l = args.length; i < l; i++) {
+                        param['$' + i] = args[i];
+                    }
+
+                    Store.dispatch({
+                        type: actionTypeMap[action.method],
+                        error: null,
+                        meta: {
+                            storeKey: action.storeKey,
+                            param
+                        },
+                        payload: ret
+                    });
+                }
+                
+                return ret;
+            });
+    };
 }

@@ -1,7 +1,7 @@
 import * as MockJS from 'mockjs';
 
 import { HashMap } from '../types';
-import * as cache from './cache';
+import * as cache from '../cache';
 
 interface CacheItem {
     rap: RAP;

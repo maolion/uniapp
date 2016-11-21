@@ -1,10 +1,12 @@
 import { FrameworkConfiguration } from './types';
+import fetch from './libs/fetch';
 
-export function initAPIs(options: FrameworkConfiguration) {
-    const apis: any = {};
-    const apiMap = options.apiMap;
-    const apiHost = options.apiHost.replace(/\/$/, '');
-    
+/** 
+ * 安装 api, 内部接口
+ */
+export function _mount(apiMap: any, apiRequestHandler = fetch) {
+    const apis: any = exports;
+
     for (let partName of Object.keys(apiMap)) {
         let part = apiMap[partName];
         let obj: any = apis[partName] = {};
@@ -13,14 +15,15 @@ export function initAPIs(options: FrameworkConfiguration) {
         }
     }
 
+    delete exports._mount;
+
     return apis;
+
     function getApiHandler(apiInfo: { url: string; method: any }) {
-        apiInfo.url = (apiInfo.url||'').charAt(0) == '/' ? apiInfo.url : '/' + apiInfo.url;
         return function(data?: any) {
-            return options.apiRequestHandler(apiHost + apiInfo.url, {
+            return apiRequestHandler(apiInfo.url, {
                 method: apiInfo.method,
-                body: data,
-                rapConfig: options.RAP
+                body: data
             });
         };
     }

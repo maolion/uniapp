@@ -2,8 +2,6 @@ import * as Immutable from 'immutable';
 
 export default {
     shouldComponentUpdate: function (nextProps: any, nextState: any) {
-        // 以下代码逻辑来自： https://zhuanlan.zhihu.com/p/2029597 @camsong
-
         const currentProps = this.props;
         const currentState = this.state;
         

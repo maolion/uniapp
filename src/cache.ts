@@ -23,6 +23,9 @@ export async function set(key: string, value: string) {
     return _cacher.set(key, value);
 }
 
-export function mount(cacher: Cache) {
+export function _mount(cacher: Cache) {
     _cacher = cacher;
+    delete exports._mount;
+
+    return _cacher;
 }
