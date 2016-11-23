@@ -54,13 +54,15 @@ export default async function fetch(
         rap = await RAP.getModel(
             rapConfig.host,
             rapConfig.projectId, 
-            IS_DEV ? RAP.BLOCK_ONLY_WHITE_LIST : RAP.DISABLED
+            IS_DEV ? RAP.BLOCK_ONLY_WHITE_LIST : RAP.DISABLED,
+            rapConfig.cache
         ); 
     }
 
     if (rap) {
         url = RAP.convertUrlToRelative(url);
         isFromRAP = !IS_DEBUG && rap.router(url);
+        
         if (isFromRAP) {
             url = rap.prefix + url;
             options.method = 'GET';

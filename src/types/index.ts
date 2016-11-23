@@ -1,3 +1,5 @@
+import Cache from '../libs/cache';
+
 export interface HashMap<T> {
     [key: string]: T;
 }
@@ -13,10 +15,12 @@ export interface StoreAction {
     payload: Object
 }
 
+export type RESTfulHttpMethod = "GET" | "POST" | "PATCH" | "DELETE";
+
 /** 请求配置参数 */
 export interface RequestOptions {
     /** 请求 HTTP方法 */
-    method?: "GET" | "POST" | "PATCH" | "DELETE";
+    method?: RESTfulHttpMethod;
 
     /** 设置 HTTP头 */
     headers?: HashMap<string>;
@@ -32,11 +36,12 @@ export interface RequestOptions {
 
     /** 请求完成之后 被调用  */
     complete?: (responseJSON: any, responseText: string, url: string, method: string, isFormRAP: boolean) => void;
-
+    
     /** 如果使用到RAP, 这里可以配置相关连接参数 */
     rapConfig?: {
         host: string;
         projectId: number;
+        cache?: Cache;
     };
 }
 

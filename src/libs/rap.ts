@@ -1,7 +1,7 @@
 import * as MockJS from 'mockjs';
 
 import { HashMap } from '../types';
-import * as cache from '../cache';
+import Cache from './cache';
 
 interface CacheItem {
     rap: RAP;
@@ -119,18 +119,18 @@ export class RAP {
     }
 }
 
-export async function getModel(host: string, projectId: number, mode: number) {
+export async function getModel(host: string, projectId: number, mode: number, cache?: Cache) {
     const url = `${host}/mock/getWhiteList.do?projectId=${projectId}#mode=${mode}`;
 
     if (RAPInstacheCacheMapping[url]) {
         return RAPInstacheCacheMapping[url];
     }
 
-    const ret = RAPInstacheCacheMapping[url] = _getModel(url, host, projectId, mode);
+    const ret = RAPInstacheCacheMapping[url] = _getModel(url, host, projectId, mode, cache);
     return await ret;
 }
 
-async function _getModel(url: string, host: string, projectId: number, mode: number) {
+async function _getModel(url: string, host: string, projectId: number, mode: number, cache: Cache) {
     let requestPromise: any;
     let fromCache: boolean;
     let cachekey = encodeURIComponent(url);
@@ -147,12 +147,16 @@ async function _getModel(url: string, host: string, projectId: number, mode: num
         });
         whiteList = await response.json();
     } catch (e) {
+        if (!cache) {
+            throw e;
+        }
+
         whiteList = JSON.parse(await cache.get(cachekey));
         fromCache = true;
         console.log("get rap whiteList from local cache.");
     }
 
-    if (!fromCache) {
+    if (!fromCache && cache) {
         cache.set(cachekey, JSON.stringify(whiteList));
     }
 
