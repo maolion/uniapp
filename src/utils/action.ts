@@ -15,10 +15,6 @@ interface ActionContext {
     context?: ActionContext
 }
 
-export function dispatch() {
-    
-}
-
 /**
  * action方法 装饰器
  */

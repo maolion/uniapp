@@ -1,11 +1,4 @@
-import * as React from 'react';
 import * as Villa from 'villa';
-import { 
-    Component, 
-    PureComponent, 
-    HTMLAttributes, 
-    HTMLProps 
-} from 'react';
 import * as Immutable from 'immutable';
 
 import { 
@@ -35,7 +28,8 @@ class Actions {
 
     constructor(actionMap: any, store: Redux.Store<any>) {
         this._store = store;
-
+        
+        return this._mapping(actionTypeMap);
     }
 
     private _mapping(target: any) {
