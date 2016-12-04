@@ -1,6 +1,6 @@
 {
   "name": "qmox",
-  "version": "0.1.0-dev.3",
+  "version": "0.1.0-dev.4",
   "description": "qmox 框架基础模块",
   "main": "./dist/index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "@types/redux": "^3.6.31",
     "@types/redux-thunk": "^2.1.31",
     "@types/whatwg-fetch": "0.0.32",
+    "rimraf": "^2.5.4",
     "typescript": "^2.1.0-dev.20161109"
   },
   "dependencies": {

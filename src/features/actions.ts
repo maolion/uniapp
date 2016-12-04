@@ -23,7 +23,7 @@ const actionTypeMap: HashMap<string> = {
 /**
  * 根据提交的 action配置结构信息 创建对应的 redux action 便捷调用函数
  */
-class Actions {
+export default class Actions {
     private _store: Redux.Store<any>;
 
     constructor(actionMap: any, store: Redux.Store<any>) {

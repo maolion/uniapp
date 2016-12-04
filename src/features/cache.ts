@@ -2,6 +2,8 @@ import Cache from '../libs/cache';
 
 let _cache: Cache;
 
+export default Cache;
+
 export async function get(key: string) {
     if (!_cache) {
         return;

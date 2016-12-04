@@ -28,7 +28,7 @@ let store: Redux.Store<any>;
 /**
  * 创建一个 redux store 扩展对象，主要强制绑定了一个 appData Reducer
  */
-class Store implements Redux.Store<any> {
+export default class Store implements Redux.Store<any> {
     private _origin: Redux.Store<any>;
 
     constructor(

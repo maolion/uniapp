@@ -7,3 +7,6 @@ export abstract class Navigator {
     abstract back(): void;
     abstract forward(): void;
 }
+
+export default Navigator;
+
