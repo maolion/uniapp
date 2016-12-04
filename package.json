@@ -1,6 +1,6 @@
 {
-  "name": "qmox-base",
-  "version": "0.1.0-dev.1",
+  "name": "qmox",
+  "version": "0.1.0-dev.3",
   "description": "qmox 框架基础模块",
   "main": "./dist/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/maolion/qmox-base.git"
+    "url": "git+ssh://git@github.com/maolion/qmox.git"
   },
   "keywords": [
     "qmox"
@@ -19,9 +19,9 @@
   "author": "maolion.j@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maolion/qmox-base/issues"
+    "url": "https://github.com/maolion/qmox/issues"
   },
-  "homepage": "https://github.com/maolion/qmox-base#readme",
+  "homepage": "https://github.com/maolion/qmox#readme",
   "devDependencies": {
     "@types/immutable": "^3.8.5",
     "@types/node": "^6.0.48",
