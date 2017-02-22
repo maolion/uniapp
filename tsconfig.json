@@ -10,7 +10,7 @@
         "preserveConstEnums": true,
         "noLib": false,
         "sourceMap": true,
-        "outDir": "./dist/a.js",
+        "outDir": "./dist",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "pretty": true,
@@ -20,5 +20,7 @@
     "include": [
         "./typings/**/*",
         "./src/**/*"
-    ]
+    ],
+    "compileOnSave": false,
+    "buildOnSave": true
 }

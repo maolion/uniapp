@@ -1,27 +1,28 @@
 {
-  "name": "qmox",
-  "version": "0.1.0-dev.4",
-  "description": "qmox 框架基础模块",
+  "name": "uniapp",
+  "version": "0.1.0-dev.0",
+  "description": "uniapp 框架基础模块",
   "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "scripts": {
     "start": "tsc -v && tsc --watch",
-    "build": "tsc -v && tsc --declaration",
-    "deploy-dev": "rimraf dist && npm run build && npm publish --tag dev",
+    "build": "rimraf dist && tsc -v && tsc --declaration",
+    "deploy-dev": "npm run build && npm publish --tag dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/maolion/qmox.git"
+    "url": "git+ssh://git@github.com/maolion/uniapp.git"
   },
   "keywords": [
-    "qmox"
+    "uniapp"
   ],
   "author": "maolion.j@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maolion/qmox/issues"
+    "url": "https://github.com/maolion/uniapp/issues"
   },
-  "homepage": "https://github.com/maolion/qmox#readme",
+  "homepage": "https://github.com/maolion/uniapp#readme",
   "devDependencies": {
     "@types/immutable": "^3.8.5",
     "@types/node": "^6.0.48",

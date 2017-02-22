@@ -1,11 +1,22 @@
-import _Actions from './features/actions';
-import _Store from './features/store';
-import _Apis from './features/apis';
-import _Cache from './features/cache';
-import _Navigator from './features/navigator';
+import Actions from './features/actions';
+import Store from './features/store';
+import Apis from './features/apis';
+import Cache from './features/cache';
+import Navigator from './features/navigator';
 
-export var Actions: _Actions;
-export var Store: _Store;
-export var Apis: _Apis;
-export var Cache: _Cache;
-export var Navigator: _Navigator;
+export default class App {
+    private _actions: Actions;
+    private _store: Store;
+    private _cache: Cache;
+    private _navigator: Navigator;
+
+    public set actions(actions: Actions) {
+
+    }
+
+    public get actions(): Actions {
+        return this._actions;
+    }
+    
+}
+
