@@ -1,22 +1,18 @@
-import Actions from './features/actions';
-import Store from './features/store';
-import Apis from './features/apis';
-import Cache from './features/cache';
-import Navigator from './features/navigator';
+import Navigator from './modules/navigator';
+import Plugin from './modules/plugin';
+import storeComposs from './modules/store-composs';
 
-export default class App {
-    private _actions: Actions;
-    private _store: Store;
-    private _cache: Cache;
-    private _navigator: Navigator;
+import * as Utils from './utils/';
+import * as Mixins from './mixins';
+import * as Types from './types/';
+import * as Constants from './constants';
 
-    public set actions(actions: Actions) {
-
-    }
-
-    public get actions(): Actions {
-        return this._actions;
-    }
-    
-}
-
+export {
+    Navigator,
+    Plugin,
+    storeComposs,
+    Mixins,
+    Utils,
+    Types,
+    Constants
+};
