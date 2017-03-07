@@ -1,6 +1,6 @@
 import Navigator from './modules/navigator';
 import Plugin from './modules/plugin';
-import storeComposs from './modules/store-composs';
+import Store from './modules/store';
 
 import * as Utils from './utils/';
 import * as Mixins from './mixins';
@@ -10,7 +10,7 @@ import * as Constants from './constants';
 export {
     Navigator,
     Plugin,
-    storeComposs,
+    Store,
     Mixins,
     Utils,
     Types,

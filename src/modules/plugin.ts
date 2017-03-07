@@ -19,6 +19,3 @@ abstract class _Plugin {
 
 export default _Plugin;
 
-
-
-

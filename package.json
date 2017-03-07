@@ -5,8 +5,10 @@
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "start": "tsc -v && tsc --watch",
-    "build": "rimraf dist && tsc -v && tsc --declaration --declarationDir ./dist/typings/",
+    "start": "tsc -v && (tsc -w & tsc -p tsconfig-esc.json -w)",
+    "build-base": "tsc -d --declarationDir ./dist/typings/",
+    "build-esc": "tsc -p tsconfig-esc.json -d --declarationDir ./dist/typings/extra-subcommands",
+    "build": "rimraf dist && tsc -v && (npm run build-base & npm run build-esc)",
     "deploy-dev": "npm run build && npm publish --tag dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -25,17 +27,17 @@
   "homepage": "https://github.com/maolion/uniapp#readme",
   "devDependencies": {
     "@types/immutable": "^3.8.5",
+    "@types/lodash": "^4.14.54",
     "@types/node": "^7.0.5",
     "@types/react": "^15.0.14",
     "@types/redux": "^3.6.31",
-    "@types/redux-thunk": "^2.1.31",
-    "@types/whatwg-fetch": "0.0.33",
     "rimraf": "^2.6.1",
     "typescript": "^2.2.1"
   },
   "dependencies": {
     "events": "^1.1.1",
     "immutable": "^3.8.1",
+    "lodash": "^4.17.4",
     "mockjs": "^1.0.1-beta3",
     "react": "^15.3.2",
     "villa": "^0.2.11"
