@@ -4,6 +4,7 @@
         "lib" : ["es2015.promise", "es6", "dom"],
         "module": "commonjs",
         "declaration": false,
+        "strictNullChecks": true,
         "noImplicitAny": true,
         "removeComments": true,
         "noEmitOnError": false,

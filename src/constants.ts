@@ -1,1 +1,1 @@
-export const GLOBAL = (function() { return this })();
+export const NOOP = 0;

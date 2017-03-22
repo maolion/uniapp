@@ -5,11 +5,12 @@
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts": {
-    "start": "tsc -v && (tsc -w & tsc -p tsconfig-esc.json -w)",
-    "build-base": "tsc -d --declarationDir ./dist/typings/",
-    "build-esc": "tsc -p tsconfig-esc.json -d --declarationDir ./dist/typings/extra-subcommands",
-    "build": "rimraf dist && tsc -v && (npm run build-base & npm run build-esc)",
-    "deploy-dev": "npm run build && npm publish --tag dev",
+    "start": "tsc --watch",
+    "build": "tsc --declaration",
+    "deploy": "./scripts/deploy.sh",
+    "link": "npm run build && ./scripts/npm-link.sh",
+    "unlink": "cd ./dist && npm unlink",
+    "prepublish": "exit 1",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
