@@ -1,6 +1,6 @@
 import {
-    createStore,
-    combineReducers
+    combineReducers,
+    createStore
 } from 'redux';
 
 import * as Utils from '../utils';

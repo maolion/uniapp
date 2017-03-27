@@ -1,13 +1,13 @@
-import App from './modules/app';
+import Application from './modules/application';
 import Navigator from './modules/navigator';
 import Plugin from './modules/plugin';
 import Store from './modules/store';
 
-import * as Utils from './utils/';
 import * as Types from './types/';
+import * as Utils from './utils/';
 
 export {
-    App,
+    Application,
     Navigator,
     Plugin,
     Store,

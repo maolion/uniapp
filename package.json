@@ -6,7 +6,9 @@
   "typings": "./dist/index.d.ts",
   "scripts": {
     "start": "tsc --watch",
-    "build": "tsc --declaration",
+    "tslint": "tslint",
+    "lint": "tslint src/**/*.ts -c tslint.json",
+    "build": "npm run lint && tsc --declaration",
     "deploy": "./scripts/deploy.sh",
     "link": "npm run build && ./scripts/npm-link.sh",
     "unlink": "cd ./dist && npm unlink",
@@ -27,13 +29,14 @@
   },
   "homepage": "https://github.com/maolion/uniapp#readme",
   "devDependencies": {
-    "@types/immutable": "^3.8.5",
     "@types/lodash": "^4.14.55",
     "@types/node": "^7.0.8",
     "@types/react": "^15.0.16",
     "@types/redux": "^3.6.31",
     "rimraf": "^2.6.1",
-    "typescript": "^2.2.1"
+    "tslint": "^4.5.1",
+    "typescript": "^2.2.1",
+    "vts": "^0.1.1"
   },
   "dependencies": {
     "events": "^1.1.1",

@@ -1,11 +1,10 @@
 /**
  * 路由导航控制器
  */
-export interface Navigator {
-    go(route: any, replace?: boolean): void;
-    back(): void;
-    forward(): void;
+export abstract class Navigator {
+    abstract go(route: any, replace?: boolean): void;
+    abstract back(): void;
+    abstract forward(): void;
 }
 
 export default Navigator;
-
