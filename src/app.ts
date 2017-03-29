@@ -1,4 +1,4 @@
-import { Store, createStore } from 'redux';
+import { Store as ReduxStore, createStore } from 'redux';
 
 import { Application } from './modules/application';
 import Plugin from './modules/plugin';
@@ -8,7 +8,7 @@ import { Constructor } from './types';
  * APP 配置数据被限定类型的属性
  */
 export interface ConfigurationProps {
-  store?: Store<any>;
+  store?: ReduxStore<any>;
 }
 
 /**
@@ -22,7 +22,13 @@ export interface Configuration extends Constructor<ConfigurationProps> {
  * APP 配置器的属性结构
  */
 export interface ConfiguratorProps {
-  store: Store<any>;
+  /** 配置在应用程序上的所有redux store实例 */
+  stores: ReduxStore<any>[];
+
+  /** 应用程序框架使用者维护的 redux store实例 */
+  store: ReduxStore<any>;
+
+  /** 挂载在应用程序上的插件集合 */
   plugins: Plugin[];
 }
 
@@ -39,18 +45,22 @@ export interface Configurator extends Constructor<any> {
  * 包装应用程序初始配置
  * 注: 返回被包装后的配置器的实例对象 只能获取到原配置数据的 store 和 其他可能存在的
  * Plugin类实例属性
- *
- * @param {Configuration} Target - 配置数据
  */
 export default function app<T extends Configurator>(Target: Configuration): T {
   return class {
-    private _store: Store<any> | undefined;
+    public stores: ReduxStore<any>[] = [];
+
+    private _store: ReduxStore<any> | undefined;
     private _plugins: Plugin[] = [];
 
     constructor() {
       let config: any = new Target();
 
       this._store = config.store;
+
+      if (this._store) {
+        this.stores.push(this._store);
+      }
 
       // 取出 配置数据里的所有 Pligun 实例，加载到 _plugins 属性上
       for (let propName of Object.keys(config)) {

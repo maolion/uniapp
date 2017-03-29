@@ -1,11 +1,7 @@
 import * as Immutable from 'immutable';
-import { Store, createStore } from 'redux';
+import { Store as ReduxStore, createStore } from 'redux';
 
-/**
- * 判断一个对象，是否为 Immutable 数据对象
- * @param {any} obj - 目标对象
- * @return {boolean}
- */
+/* 判断一个对象，是否为 Immutable 数据对象 */
 export function isImmutableData(obj: any) {
   return !!obj && (
     obj instanceof Immutable.Map ||
@@ -21,22 +17,16 @@ export function isImmutableData(obj: any) {
   );
 }
 
-/**
- * 屏蔽 redux store 对象的 replaceReducer 接口
- * @param {Redux.Store<any>} store - 目标 redux store对象
- * @return {Redux.Store<any>}
- */
-export function safeStore<T>(store: Store<any>) {
+/** 屏蔽 redux store 对象的 replaceReducer 接口 */
+export function safeStore<T>(store: ReduxStore<any>) {
   return {
     getState: store.getState,
     subscribe: store.subscribe,
     dispatch: store.dispatch,
     replaceReducer: noop
-  } as Store<T>;
+  } as ReduxStore<T>;
 }
 
-/**
- * 空函数
- */
+/** 空函数 */
 export function noop() {
 }

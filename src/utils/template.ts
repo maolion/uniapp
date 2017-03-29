@@ -72,9 +72,7 @@ format(`{1 + n}`, { n: 2 }); // 3
 format(`{a} + {b} = {a + b}`, { a: 1, : b: 2 }); // 1 + 2 = 3
 */
 
-/**
- * 将模板代码简单转换成可执行的 js代码
- */
+/** 将模板代码简单转换成可执行的 js代码 */
 function parseTemplate(template: string, defaultValue = '') {
   if (!template) {
     return '';

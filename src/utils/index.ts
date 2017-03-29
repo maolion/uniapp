@@ -1,2 +1,2 @@
 export * from './helpers';
-export * from './string';
+export * from './template';

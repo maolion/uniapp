@@ -26,9 +26,6 @@ export default class MixStore implements ReduxStore<any> {
   private _currentState: HashMap<any>;
   private _stateChanged: boolean;
 
-  /**
-   * @param {Redux.Store<any>[]} _stores - 需要被融合的 store 集合
-   */
   constructor(
     private _stores: ReduxStore<any>[]
   ) {
@@ -40,11 +37,6 @@ export default class MixStore implements ReduxStore<any> {
     this._initStoresSubscribe();
   }
 
-  /**
-   * 更新 state
-   * @param {Redux.Action} action - action 数据对象
-   * @return {Redux.Action}
-   */
   dispatch<A extends Redux.Action>(action: A): A {
     // 广播给所有 store, 给能处理 reducer 的处理
     for (let store of this._stores) {
@@ -54,11 +46,6 @@ export default class MixStore implements ReduxStore<any> {
     return action;
   }
 
-  /**
-   * 注册监听器
-   * @param {Function} listener - 回调函数
-   * @return {Function} 返回取消当前监听的函数
-   */
   subscribe(listener: SubscribeHandler) {
     if (typeof listener !== 'function') {
       throw new Error('Expected listener to be a function.');
@@ -83,10 +70,6 @@ export default class MixStore implements ReduxStore<any> {
     };
   }
 
-  /**
-   * 替换 store 的 reducer
-   * @param {Redux.Reducer<any>} nextReducer
-   */
   replaceReducer(nextReducer: Redux.Reducer<any>) {
     // MixStore的replaceReducer 并不考虑此操作的安全性，因为它假设它包含的store会自己
     // 处理好这个问题
@@ -95,9 +78,6 @@ export default class MixStore implements ReduxStore<any> {
     }
   }
 
-  /**
-   * 获取 store 的 state数据
-   */
   getState() {
     if (this._currentState && !this._stateChanged) {
       // 状态数据未改变的情况，直接使用缓存数据
@@ -155,7 +135,7 @@ export default class MixStore implements ReduxStore<any> {
 }
 
 /*
-// 使用说明
+// MixStore 使用说明
 
 let store = new MixStore([
   createStore(...),
