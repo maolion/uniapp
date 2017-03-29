@@ -1,14 +1,14 @@
-import { Store } from 'redux';
 
+/**
+ * 键值对 数值对象
+ */
 export interface HashMap<T> {
-    [key: string]: T;
+  [key: string]: T;
 }
 
-export interface ApplicationConfiguration {
-    store: Store<any>;
-
-}
-
+/**
+ * 构造器函数
+ */
 export interface Constructor<T> {
-    new(...args: any[]): T;
+  new (...args: any[]): T;
 }

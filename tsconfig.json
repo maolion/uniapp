@@ -1,31 +1,35 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "lib" : ["es2015.promise", "es6", "dom"],
-        "module": "commonjs",
-        "declaration": false,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        "removeComments": true,
-        "noEmitOnError": false,
-        "rootDir": "src",
-        "preserveConstEnums": true,
-        "skipDefaultLibCheck": true,
-        "noLib": false,
-        "sourceMap": true,
-        "outDir": "./dist",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "pretty": true,
-        "listFiles": false,
-        "jsx": "react"
-    },
-    "include": [
-        "./src/**/*"
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "es2015.promise",
+      "es6",
+      "dom"
     ],
-    "exclude": [
-        "./src/extra-subcommands/**"
-    ]
+    "module": "commonjs",
+    "declaration": false,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "removeComments": true,
+    "noEmitOnError": false,
+    "rootDir": "src",
+    "preserveConstEnums": true,
+    "skipDefaultLibCheck": true,
+    "noLib": false,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "pretty": true,
+    "listFiles": false,
+    "jsx": "react"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./src/extra-subcommands/**"
+  ]
 }
