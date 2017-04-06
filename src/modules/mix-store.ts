@@ -25,6 +25,7 @@ export default class MixStore implements ReduxStore<any> {
   private _currentListeners: SubscribeHandler[];
   private _currentState: HashMap<any>;
   private _stateChanged: boolean;
+  private _disabledListeners: boolean;
 
   constructor(
     private _stores: ReduxStore<any>[]
@@ -38,10 +39,19 @@ export default class MixStore implements ReduxStore<any> {
   }
 
   dispatch<A extends Redux.Action>(action: A): A {
+    // 禁止本实例上的所有监听器的调用，阻止重复/无谓的调用
+    // 原因是，在通过原redux store的dispatch调用之后，会触发 它自身上设计的所有 状态监听
+    // 器的调用, 而 MixStore 会将 _notifyListeners 方法 注册给每一个包含的store上.
+    this._disabledListeners = true;
+
     // 广播给所有 store, 给能处理 reducer 的处理
     for (let store of this._stores) {
       store.dispatch(action);
     }
+
+    // 开启并调用 监听器
+    this._disabledListeners = false;
+    this._notifyListeners();
 
     return action;
   }
@@ -123,6 +133,10 @@ export default class MixStore implements ReduxStore<any> {
   }
 
   private _notifyListeners() {
+    if (this._disabledListeners) {
+      return;
+    }
+
     let listeners = this._currentListeners = this._nextListeners;
 
     // 标记状态数据可能已改变
