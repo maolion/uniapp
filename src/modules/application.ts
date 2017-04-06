@@ -55,6 +55,8 @@ export abstract class Application {
 
     this.registerModule('store', this.createStore());
     this.registerModule('navigator', this.createNavigator());
+
+    this._config.onReady(this);
   }
 
   /** 应用程序运行后执行 */
@@ -62,6 +64,8 @@ export abstract class Application {
     for (let plugin of this.config.plugins) {
       plugin.appOnLaunchHook(this);
     }
+
+    this._config.onLaunch(this);
   }
 
   // 应用程序具体的运行方式由 子类实现

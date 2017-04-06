@@ -9,6 +9,8 @@ import { Constructor } from './types';
  */
 export interface ConfigurationProps {
   store?: ReduxStore<any>;
+  onReady?: (app: Application) => void;
+  onLaunch?: (app: Application) => void;
 }
 
 /**
@@ -24,12 +26,11 @@ export interface Configuration extends Constructor<ConfigurationProps> {
 export interface ConfiguratorProps {
   /** 配置在应用程序上的所有redux store实例 */
   stores: ReduxStore<any>[];
-
-  /** 应用程序框架使用者维护的 redux store实例 */
-  store: ReduxStore<any>;
-
   /** 挂载在应用程序上的插件集合 */
   plugins: Plugin[];
+  userConfig(): ConfigurationProps;
+  onReady(app: Application): void;
+  onLaunch(app: Application): void;
 }
 
 /**
@@ -48,23 +49,22 @@ export interface Configurator extends Constructor<any> {
  */
 export default function app<T extends Configurator>(Target: Configuration): T {
   return class {
-    public stores: ReduxStore<any>[] = [];
-
-    private _store: ReduxStore<any> | undefined;
+    private _stores: ReduxStore<any>[] = [];
     private _plugins: Plugin[] = [];
+    private _userConfig: ConfigurationProps;
 
     constructor() {
-      let config: any = new Target();
+      let userConfig: any = new Target();
 
-      this._store = config.store;
+      this._userConfig = userConfig;
 
-      if (this._store) {
-        this.stores.push(this._store);
+      if (userConfig.store) {
+        this.stores.push(userConfig.store);
       }
 
       // 取出 配置数据里的所有 Pligun 实例，加载到 _plugins 属性上
-      for (let propName of Object.keys(config)) {
-        let prop = config[propName];
+      for (let propName of Object.keys(userConfig)) {
+        let prop = userConfig[propName];
 
         if (propName === 'store' || !prop) {
           continue;
@@ -76,12 +76,28 @@ export default function app<T extends Configurator>(Target: Configuration): T {
       }
     }
 
-    get store() {
-      return this._store;
+    get stores() {
+      return this._stores;
     }
 
     get plugins() {
       return this._plugins;
+    }
+
+    get userConfig() {
+      return this._userConfig;
+    }
+
+    onReady(app: Application) {
+      if (this._userConfig.onReady) {
+        this._userConfig.onReady(app);
+      }
+    }
+
+    onLaunch(app: Application) {
+      if (this._userConfig.onLaunch) {
+        this._userConfig.onLaunch(app);
+      }
     }
 
     static __typeName = 'AppConfigurator';
@@ -100,5 +116,14 @@ class MyApp {
   // (可选) 需要使用的外部插件设置
   p1 = new Plugin1();
   p2 = new Plugin2();
+
+  // (可选) 事件
+  onReady(app: Application) {
+    // ....
+  }
+
+  onLaunch(app: Application) {
+    // ...
+  }
 }
 */
